@@ -1,13 +1,20 @@
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, Depends, Request
 from env import Environment
 from models import Action, Observation
 import json
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="Cyber Sec OpenEnv")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # In a multi-user environment, we would use sessions.
 # For this script we will use a global singleton for simplicity.
@@ -40,7 +47,7 @@ def get_state():
 
 def main():
     import uvicorn
-    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+    uvicorn.run("app:app", host="0.0.0.0", port=7860)
 
 if __name__ == "__main__":
     main()

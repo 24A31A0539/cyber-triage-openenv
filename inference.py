@@ -114,7 +114,7 @@ def run_inference():
 
         success = str(last_reward >= 1.0 or (task == "hard" and last_reward >= 0.8)).lower()
         r_str = ",".join(f"{r:.2f}" for r in (rewards if rewards else [0.0]))
-        print(f"[END] success={success} steps={step} rewards={r_str}", flush=True)
+        print(f"[END] success={success} steps={step} score={last_reward:.2f} rewards={r_str}", flush=True)
 
 if __name__ == "__main__":
     try:
