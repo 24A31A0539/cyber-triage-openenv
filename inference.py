@@ -8,14 +8,15 @@ def run_inference():
     # --- Strict validator credentials ---
     API_BASE_URL = os.getenv("API_BASE_URL") or "https://api.openai.com/v1"
     MODEL_NAME = os.getenv("MODEL_NAME") or "gpt-4o-mini"
-    HF_TOKEN = os.getenv("HF_TOKEN") or os.getenv("API_KEY") or "dummy-key"
+    # STRICT PRIORITY: Proxy injects API_KEY explicitly for tracking. Do not prioritize HF_TOKEN over it.
+    API_KEY = os.getenv("API_KEY") or os.getenv("HF_TOKEN") or "dummy-key"
 
     server_url = "http://127.0.0.1:7860" # VERIFIED from your Dockerfile
 
     # Initialize client exactly as OpenEnv guidelines require
     client = OpenAI(
         base_url=API_BASE_URL,
-        api_key=HF_TOKEN
+        api_key=API_KEY
     )
 
     # Wait up to 60s for the environment server to be ready
@@ -51,7 +52,7 @@ def run_inference():
             try:
                 client.chat.completions.create(
                     model=MODEL_NAME,
-                    messages=[{"role": "user", "content": "ping"}],
+                    messages=[{"role": "user", "content": f"ping task={task} step={step}"}],
                     max_tokens=1
                 )
             except Exception as e:
