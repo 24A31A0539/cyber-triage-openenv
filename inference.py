@@ -97,7 +97,7 @@ def run_inference():
 
         success = str(last_reward >= 1.0 or (task == "hard" and last_reward >= 0.8)).lower()
         r_str = ",".join(f"{r:.2f}" for r in (rewards if rewards else [0.0]))
-        print(f"[END] success={success} steps={step} score={last_reward:.2f} rewards={r_str}", flush=True)
+        print(f"[END] success={success} steps={step} rewards={r_str}", flush=True)
 
 if __name__ == "__main__":
     try:
@@ -105,4 +105,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[START] task=error env=error model=error", flush=True)
         print(f"[STEP] step=1 action=error reward=0.00 done=true error={str(e).replace(' ','_')}", flush=True)
-        print(f"[END] success=false steps=0 score=0.00 rewards=0.00", flush=True)
+        print(f"[END] success=false steps=0 rewards=0.00", flush=True)
