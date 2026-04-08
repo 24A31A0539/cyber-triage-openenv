@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from fastapi import FastAPI, Depends, Request
 from env import Environment
 from models import Action, Observation
@@ -34,6 +38,9 @@ def step_env(action: Action):
 def get_state():
     return global_env.state()
 
-if __name__ == "__main__":
+def run():
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    run()
