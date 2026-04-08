@@ -6,12 +6,9 @@ from openai import OpenAI
 
 def run_inference():
     # --- Strict validator credentials ---
-    API_BASE_URL = os.environ.get("API_BASE_URL", "https://api.openai.com/v1")
-    MODEL_NAME = os.environ.get("MODEL_NAME", "gpt-4o-mini")
-    HF_TOKEN = os.environ.get("HF_TOKEN")
-    
-    if HF_TOKEN is None:
-        HF_TOKEN = os.environ.get("API_KEY", "dummy-key")
+    API_BASE_URL = os.getenv("API_BASE_URL") or "https://api.openai.com/v1"
+    MODEL_NAME = os.getenv("MODEL_NAME") or "gpt-4o-mini"
+    HF_TOKEN = os.getenv("HF_TOKEN") or os.getenv("API_KEY") or "dummy-key"
 
     server_url = "http://127.0.0.1:7860" # VERIFIED from your Dockerfile
 
@@ -106,4 +103,6 @@ if __name__ == "__main__":
     try:
         run_inference()
     except Exception as e:
-        print(f"[END] success=false steps=0 score=0.00 rewards=0.00 error={str(e).replace(' ','_')}", flush=True)
+        print(f"[START] task=error env=error model=error", flush=True)
+        print(f"[STEP] step=1 action=error reward=0.00 done=true error={str(e).replace(' ','_')}", flush=True)
+        print(f"[END] success=false steps=0 score=0.00 rewards=0.00", flush=True)
