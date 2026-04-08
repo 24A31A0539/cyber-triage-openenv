@@ -22,11 +22,11 @@ def get_initial_alerts(task_level: str) -> list[SecurityAlert]:
 
 def get_task_description(task_level: str) -> str:
     if task_level == "easy":
-        return "Classify the single internal failed login alert as 'Low' severity."
+        return "Classify alert_1 ('Failed Login') as 'Low' severity."
     elif task_level == "medium":
-        return "Classify alerts: Failed logins/scans are 'Low', SQL injection via external IP is 'High'."
+        return "Classify alert_1 and alert_3 as 'Low' severity. Classify alert_2 ('SQL Injection') as 'High' severity."
     elif task_level == "hard":
-        return "Classify alerts. Escalate the Data Exfiltration to 'Tier3' and add 'BlockIP' mitigation tag to the SQL Injection."
+        return "Classify alert_1 and alert_3 as 'Low' severity. Classify alert_2 as 'High' and assign mitigation_tag 'BlockIP'. Classify alert_4 as 'Critical' and escalate_to_team 'Tier3'."
     return ""
 
 def grade_task(task_level: str, alerts: list[SecurityAlert]) -> float:
