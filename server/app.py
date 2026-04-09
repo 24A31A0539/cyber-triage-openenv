@@ -1,10 +1,11 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from fastapi import FastAPI, Depends, Request
-from env import Environment
-from models import Action, Observation
-import json
-
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from env import Environment
+from models import Action
 
 app = FastAPI(title="Cyber Sec OpenEnv")
 
@@ -16,8 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In a multi-user environment, we would use sessions.
-# For this script we will use a global singleton for simplicity.
 global_env = Environment()
 
 @app.get("/")
@@ -26,13 +25,11 @@ def read_root():
 
 @app.post("/reset")
 async def reset_env(request: Request):
-    # To parse task from kwargs if passed
     try:
         data = await request.json()
         task = data.get("task", "easy")
     except:
         task = "easy"
-        
     obs = global_env.reset(task)
     return {"observation": obs.model_dump(), "info": {}}
 
@@ -47,7 +44,7 @@ def get_state():
 
 def main():
     import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=7860)
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
 
 if __name__ == "__main__":
     main()
