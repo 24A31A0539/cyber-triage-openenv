@@ -1,0 +1,17 @@
+spec_version: 1
+name: cyber_sec_triage
+description: A cybersecurity operations center (SOC) environment testing an agent's ability to classify, tag mitigate, and escalate security alerts efficiently.
+type: space
+runtime: fastapi
+app: main:app
+port: 8000
+action_space: models.Action
+observation_space: models.Observation
+tasks:
+  - easy
+  - medium
+  - hard
+endpoints:
+  - /reset
+  - /step
+  - /state

@@ -2,30 +2,13 @@ import os
 import requests
 from openai import OpenAI
 
-API_BASE_URL = os.environ["API_BASE_URL"]
-API_KEY = os.environ["API_KEY"]
-MODEL_NAME = os.environ.get("MODEL_NAME", "gpt-4o-mini")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
+HF_TOKEN = os.getenv("HF_TOKEN", "")
 
 def run_inference():
-    server_url = "http://127.0.0.1:7860"
+    server_url = "http://127.0.0.1:8000"
     
-    print(f"Initializing OpenAI client with BASE_URL: {API_BASE_URL}", flush=True)
-    
-    # Validator Proxy Satisfaction Call (Step 0)
-    # This MUST execute through the proxy for the validator to record API activity.
-    try:
-        client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
-        response = client.chat.completions.create(
-            model=MODEL_NAME,
-            messages=[{"role": "user", "content": "You are a cybersecurity triage assistant. Respond with 'READY'."}],
-            max_tokens=10
-        )
-        llm_response = response.choices[0].message.content.strip()
-        print(f"[STEP] step=0 action=llm_call reward=0.00 done=false error=null response='{llm_response}'", flush=True)
-    except Exception as e:
-        error_msg = str(e).replace(' ', '_').replace('\n', '_')
-        print(f"[STEP] step=0 action=llm_call reward=0.00 done=false error={error_msg}", flush=True)
-
     for task in ["easy", "medium", "hard"]:
         print(f"[START] task={task} env=cyber_sec_triage model={MODEL_NAME}")
         
