@@ -4,12 +4,10 @@ from openai import OpenAI
 
 API_BASE_URL = os.environ["API_BASE_URL"]
 API_KEY = os.environ["API_KEY"]
-MODEL_NAME = os.environ.get("MODEL_NAME", "gpt-4o-mini")
+MODEL_NAME = os.environ.get("MODEL_NAME", "meta-llama/Llama-3-70b-chat")
 
 def run_inference():
     server_url = "http://127.0.0.1:7860"
-    
-    print(f"Initializing OpenAI client with BASE_URL: {API_BASE_URL}", flush=True)
     
     # Validator Proxy Satisfaction Call (Step 0)
     # This MUST execute through the proxy for the validator to record API activity.
