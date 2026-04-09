@@ -30,21 +30,25 @@ def get_task_description(task_level: str) -> str:
     return ""
 
 def grade_task(task_level: str, alerts: list[SecurityAlert]) -> float:
+    """Grade task and return score strictly within (0, 1) exclusive."""
     score = 0.0
     if task_level == "easy":
         for a in alerts:
             if a.id == "alert_1" and a.severity == "Low":
-                return 1.0
-        return 0.0
-        
+                score = 0.99
+                break
+        else:
+            score = 0.01
+
     elif task_level == "medium":
         correct = 0
         for a in alerts:
             if a.id == "alert_1" and a.severity == "Low": correct += 1
             if a.id == "alert_2" and a.severity == "High": correct += 1
             if a.id == "alert_3" and a.severity == "Low": correct += 1
-        return round(correct / 3.0, 2)
-        
+        # Map 0/3->0.01, 1/3->0.34, 2/3->0.67, 3/3->0.99
+        score = round(0.01 + (correct / 3.0) * 0.98, 2)
+
     elif task_level == "hard":
         correct = 0
         for a in alerts:
@@ -54,8 +58,10 @@ def grade_task(task_level: str, alerts: list[SecurityAlert]) -> float:
             if a.id == "alert_3" and a.severity == "Low": correct += 1
             if a.id == "alert_4" and a.severity == "Critical":
                 if a.escalated_to and "Tier3" in a.escalated_to:
-                    correct += 2 # Worth more
-        
-        return round(min(1.0, correct / 5.0), 2)
-        
-    return 0.0
+                    correct += 2  # Worth more
+        # Map 0/5->0.01, 5/5->0.99
+        score = round(0.01 + (min(correct, 5) / 5.0) * 0.98, 2)
+
+    # Clamp strictly within (0, 1) — never exactly 0.0 or 1.0
+    return max(0.01, min(0.99, score))
+
